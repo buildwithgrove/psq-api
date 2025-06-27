@@ -56,9 +56,16 @@ echo "📁 Setting up application directory..."
 mkdir -p /opt/psq-api
 cd /opt/psq-api
 
-# Clone repository (you'll need to modify this)
-echo "📥 Cloning repository..."
-git clone https://github.com/buildwithgrove/psq-api.git .
+# Clone or update repository
+echo "📥 Setting up repository..."
+if [ -d ".git" ]; then
+    echo "Repository exists, updating..."
+    git fetch origin
+    git reset --hard origin/main
+else
+    echo "Cloning repository..."
+    git clone https://github.com/buildwithgrove/psq-api.git .
+fi
 
 # Create environment file
 echo "⚙️ Creating environment configuration..."
