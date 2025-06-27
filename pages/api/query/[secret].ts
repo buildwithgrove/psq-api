@@ -43,21 +43,19 @@ async function scanPocketdForPayment(payorAddress: string, secret: string, times
   
   while (Date.now() - startTime < timeoutMs) {
     try {
-      // Use HTTP RPC instead of CLI
-      const rpcUrl = `${config.node}/txs?message.action=send&transfer.recipient=${targetAddress}&limit=50`;
-      const response = await fetch(rpcUrl);
+      // Query pocketd for transactions to the target address
+      const cmd = `pocketd query bank all-balances ${targetAddress} --node=${config.node} --chain-id=${config.chainId} --output=json`;
+      const { stdout } = await execAsync(cmd);
       
-      if (response.ok) {
-        const data = await response.json();
-        
-        // TODO: Parse transaction data and verify:
-        // 1. Sender matches payorAddress  
-        // 2. Timestamp > API call time
-        // 3. Memo contains the secret
-        // 4. Amount >= 20000000upokt
-        
-        console.log(`Checking transactions for ${targetAddress}...`);
-      }
+      // TODO: Implement actual transaction scanning logic
+      // This would need to:
+      // 1. Query for transactions to targetAddress
+      // 2. Filter by sender (payorAddress)
+      // 3. Check timestamp > API call time
+      // 4. Verify memo contains the secret
+      // 5. Verify amount >= 20000000upokt
+      
+      console.log(`Querying pocketd for transactions to ${targetAddress}...`);
       
       // For demo purposes, simulate finding payment after 10 seconds
       if (Date.now() - startTime > 10000) {
@@ -67,7 +65,7 @@ async function scanPocketdForPayment(payorAddress: string, secret: string, times
       
       await new Promise(resolve => setTimeout(resolve, 5000));
     } catch (error) {
-      console.error('Error querying Pocket RPC:', error);
+      console.error('Error querying pocketd:', error);
       await new Promise(resolve => setTimeout(resolve, 5000));
     }
   }

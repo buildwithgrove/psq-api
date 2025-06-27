@@ -83,7 +83,7 @@ Required environment variables:
 ## Deployment
 
 ### Server Deployment
-The API requires CLI tools (`poktrolld`, `bq`) and must be deployed on a VPS or dedicated server.
+The API requires CLI tools (`pocketd`, `bq`) and must be deployed on a VPS or dedicated server.
 
 **Requirements:**
 - Ubuntu 20.04+ or Debian 12+ VPS
