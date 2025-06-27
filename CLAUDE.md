@@ -86,7 +86,7 @@ Required environment variables in Vercel:
 The API requires CLI tools (`poktrolld`, `bq`) that aren't available in serverless environments.
 
 **Requirements:**
-- Ubuntu 20.04+ VPS
+- Ubuntu 20.04+ or Debian 12+ VPS
 - 2GB RAM minimum
 - Docker & Docker Compose
 - Google Cloud service account JSON
