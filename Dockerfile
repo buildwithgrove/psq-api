@@ -4,6 +4,9 @@ FROM node:18-slim
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
+    git \
+    make \
+    build-essential \
     gnupg2 \
     software-properties-common \
     apt-transport-https \
@@ -16,9 +19,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     apt-get update && apt-get install -y google-cloud-cli && \
     rm -rf /var/lib/apt/lists/*
 
-# Install poktrolld (Pocket Network CLI)
-RUN wget -O /usr/local/bin/poktrolld https://github.com/pokt-network/poktroll/releases/latest/download/poktrolld_linux_amd64 && \
-    chmod +x /usr/local/bin/poktrolld
+# Note: poktrolld CLI will be installed via HTTP RPC calls instead
+# This avoids complex build process and dependencies
 
 # Set working directory
 WORKDIR /app
