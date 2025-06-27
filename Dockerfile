@@ -19,13 +19,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.
     apt-get update && apt-get install -y google-cloud-cli && \
     rm -rf /var/lib/apt/lists/*
 
-# Install pocketd CLI
-RUN wget -O /tmp/pocket_linux_amd64.tar.gz https://github.com/pokt-network/poktroll/releases/download/latest/pocket_linux_amd64.tar.gz && \
-    cd /tmp && \
-    tar -xf pocket_linux_amd64.tar.gz && \
-    mv pocketd /usr/local/bin/pocketd && \
-    rm pocket_linux_amd64.tar.gz && \
-    chmod +x /usr/local/bin/pocketd
+# Note: Using HTTP RPC calls instead of pocketd CLI
+# pocketd binary is not consistently available in releases
 
 # Set working directory
 WORKDIR /app
