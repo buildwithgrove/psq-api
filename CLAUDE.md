@@ -80,10 +80,65 @@ Required environment variables in Vercel:
 - Dev: `npm run dev`  
 - Deploy: `vercel --prod`
 
+## Deployment Options
+
+### Vultr Server Deployment (Recommended)
+The API requires CLI tools (`poktrolld`, `bq`) that aren't available in serverless environments.
+
+**Requirements:**
+- Ubuntu 20.04+ VPS
+- 2GB RAM minimum
+- Docker & Docker Compose
+- Google Cloud service account JSON
+
+**Quick Deploy:**
+```bash
+# On your Vultr server
+curl -fsSL https://raw.githubusercontent.com/buildwithgrove/psq-api/main/deploy.sh | sudo bash
+```
+
+**Manual Deploy:**
+```bash
+# Clone repository
+git clone https://github.com/buildwithgrove/psq-api.git
+cd psq-api
+
+# Add Google Cloud credentials
+nano credentials.json  # Paste your service account JSON
+
+# Set environment
+echo "CHAIN_ENV=BETA" > .env
+
+# Deploy with Docker
+docker-compose up -d --build
+```
+
+**DNS Setup:**
+Point `psq-api.grove.city` to your server's IP address.
+
+### Vercel Deployment (Limited)
+⚠️ **Not recommended** - CLI tools not available in serverless environment.
+Current Vercel deployment will timeout due to missing dependencies.
+
 ## Local Development
 Set environment variables:
 ```bash
 export CHAIN_ENV=BETA
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
 npm run dev
+```
+
+## Server Management
+```bash
+# View logs
+docker-compose logs -f
+
+# Restart API
+docker-compose restart psq-api
+
+# Update deployment
+git pull && docker-compose up -d --build
+
+# System service
+systemctl status psq-api
 ```
