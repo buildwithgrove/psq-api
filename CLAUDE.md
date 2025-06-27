@@ -70,20 +70,20 @@ Controls which Pocket network to connect to:
   - Node: `https://shannon-grove-rpc.mainnet.poktroll.com`
   - Chain ID: `pocket`
 
-### Vercel Environment Variables
-Required environment variables in Vercel:
+### Environment Variables
+Required environment variables:
 - `GOOGLE_APPLICATION_CREDENTIALS`: Google Cloud service account credentials
 - `CHAIN_ENV`: Set to `BETA` or `MAIN`
 
 ## Development Commands
 - Build: `npm run build`
 - Dev: `npm run dev`  
-- Deploy: `vercel --prod`
+- Start: `npm start`
 
-## Deployment Options
+## Deployment
 
-### Vultr Server Deployment (Recommended)
-The API requires CLI tools (`poktrolld`, `bq`) that aren't available in serverless environments.
+### Server Deployment
+The API requires CLI tools (`poktrolld`, `bq`) and must be deployed on a VPS or dedicated server.
 
 **Requirements:**
 - Ubuntu 20.04+ or Debian 12+ VPS
@@ -93,7 +93,7 @@ The API requires CLI tools (`poktrolld`, `bq`) that aren't available in serverle
 
 **Quick Deploy:**
 ```bash
-# On your Vultr server
+# On your server
 curl -fsSL https://raw.githubusercontent.com/buildwithgrove/psq-api/main/deploy.sh | sudo bash
 ```
 
@@ -115,10 +115,6 @@ docker-compose up -d --build
 
 **DNS Setup:**
 Point `psq-api.grove.city` to your server's IP address.
-
-### Vercel Deployment (Limited)
-⚠️ **Not recommended** - CLI tools not available in serverless environment.
-Current Vercel deployment will timeout due to missing dependencies.
 
 ## Local Development
 Set environment variables:

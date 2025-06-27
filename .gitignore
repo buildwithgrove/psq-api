@@ -50,8 +50,6 @@ jspm_packages/
 # Next.js
 .next
 
-# Vercel
-.vercel
 
 # TypeScript
 *.tsbuildinfo
