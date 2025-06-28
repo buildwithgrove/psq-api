@@ -83,12 +83,14 @@ Required environment variables:
 ## Deployment
 
 ### Server Deployment
-The API requires CLI tools (`pocketd`, `bq`) and must be deployed on a VPS or dedicated server.
+The API requires CLI tools (`pocketd`, `bq`) and runs as a systemd service.
 
 **Requirements:**
 - Ubuntu 20.04+ or Debian 12+ VPS
 - 2GB RAM minimum
-- Docker & Docker Compose
+- Node.js 18+
+- pocketd CLI installed
+- Google Cloud SDK with bq command
 - Google Cloud service account JSON
 
 **Quick Deploy:**
@@ -99,18 +101,43 @@ curl -fsSL https://raw.githubusercontent.com/buildwithgrove/psq-api/main/deploy.
 
 **Manual Deploy:**
 ```bash
+# Install dependencies
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash -
+sudo apt-get install -y nodejs nginx
+
+# Install Google Cloud SDK
+# Follow: https://cloud.google.com/sdk/docs/install
+
+# Install pocketd CLI
+# Follow: https://dev.poktroll.com/explore/account_management/create_new_account_cli
+
 # Clone repository
-git clone https://github.com/buildwithgrove/psq-api.git
-cd psq-api
+sudo git clone https://github.com/buildwithgrove/psq-api.git /opt/psq-api
+cd /opt/psq-api
+
+# Set up user and permissions
+sudo useradd -r -m psqapi
+sudo chown -R psqapi:psqapi /opt/psq-api
+
+# Install dependencies and build
+sudo -u psqapi npm ci --only=production
+sudo -u psqapi npm run build
+
+# Configure environment
+echo "CHAIN_ENV=BETA" | sudo tee /opt/psq-api/.env
+echo "NODE_ENV=production" | sudo tee -a /opt/psq-api/.env
+echo "GOOGLE_APPLICATION_CREDENTIALS=/opt/psq-api/credentials.json" | sudo tee -a /opt/psq-api/.env
 
 # Add Google Cloud credentials
-nano credentials.json  # Paste your service account JSON
+sudo nano /opt/psq-api/credentials.json  # Paste service account JSON
+sudo chown psqapi:psqapi /opt/psq-api/credentials.json
+sudo chmod 600 /opt/psq-api/credentials.json
 
-# Set environment
-echo "CHAIN_ENV=BETA" > .env
-
-# Deploy with Docker
-docker-compose up -d --build
+# Install systemd service
+sudo cp psq-api.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable psq-api
+sudo systemctl start psq-api
 ```
 
 **DNS Setup:**
@@ -127,14 +154,21 @@ npm run dev
 ## Server Management
 ```bash
 # View logs
-docker-compose logs -f
+journalctl -u psq-api -f
 
 # Restart API
-docker-compose restart psq-api
+systemctl restart psq-api
 
 # Update deployment
-git pull && docker-compose up -d --build
+cd /opt/psq-api
+git pull
+sudo -u psqapi npm run build
+systemctl restart psq-api
 
-# System service
+# Service status
 systemctl status psq-api
+
+# Nginx management
+systemctl status nginx
+systemctl reload nginx
 ```

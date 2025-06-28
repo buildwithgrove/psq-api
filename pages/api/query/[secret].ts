@@ -43,23 +43,20 @@ async function scanPocketdForPayment(payorAddress: string, secret: string, times
   
   while (Date.now() - startTime < timeoutMs) {
     try {
-      // Use HTTP RPC instead of CLI since pocketd binary is not consistently available
-      const rpcUrl = `${config.node}/cosmos/bank/v1beta1/balances/${targetAddress}`;
-      const response = await fetch(rpcUrl);
+      // Query pocketd for transactions to the target address
+      const cmd = `pocketd query bank all-balances ${targetAddress} --node=${config.node} --chain-id=${config.chainId} --output=json`;
+      const { stdout } = await execAsync(cmd);
       
-      if (response.ok) {
-        const data = await response.json();
-        
-        // TODO: Implement actual transaction scanning logic
-        // This would need to:
-        // 1. Query for transactions to targetAddress  
-        // 2. Filter by sender (payorAddress)
-        // 3. Check timestamp > API call time
-        // 4. Verify memo contains the secret
-        // 5. Verify amount >= 20000000upokt
-        
-        console.log(`Checking balances for ${targetAddress}...`);
-      }
+      // TODO: Implement actual transaction scanning logic
+      // This would need to:
+      // 1. Query for transactions to targetAddress
+      // 2. Filter by sender (payorAddress)
+      // 3. Check timestamp > API call time
+      // 4. Verify memo contains the secret
+      // 5. Verify amount >= 20000000upokt
+      
+      console.log(`Querying pocketd for transactions to ${targetAddress}...`);
+      console.log(`Balance query result: ${stdout}`);
       
       // For demo purposes, simulate finding payment after 10 seconds
       if (Date.now() - startTime > 10000) {

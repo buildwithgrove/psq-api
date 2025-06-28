@@ -1,0 +1,35 @@
+[Unit]
+Description=Portal Supplier Quality API
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=psqapi
+Group=psqapi
+WorkingDirectory=/opt/psq-api
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=psq-api
+
+# Environment variables
+Environment=NODE_ENV=production
+Environment=PORT=3000
+EnvironmentFile=-/opt/psq-api/.env
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/psq-api
+ProtectHome=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+[Install]
+WantedBy=multi-user.target
